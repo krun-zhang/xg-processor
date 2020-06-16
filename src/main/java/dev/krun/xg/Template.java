@@ -7,6 +7,6 @@ package dev.krun.xg;
  */
 public abstract class Template {
 
-	public abstract String generate(String entityClassName, String entityName);
+	public abstract String generate(String entityPackageName, String entityName);
 
 }
