@@ -52,6 +52,7 @@ public class TemplateRender {
 	}
 
 	protected String renderTemplate(Template template, String entityClassName) {
+		System.out.println(String.format("Using template \"%s\" for entity %s.", template.getClass().getSimpleName(), entityClassName));
 		return template.generate(entityClassName, entityClassName.substring(entityClassName.lastIndexOf(".") + 1));
 	}
 }
