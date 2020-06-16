@@ -5,7 +5,7 @@
 ## Features
 
 * 无代码侵入性，*maven* 中依赖此项目后，通过环境变量设置相关参数就可以开始生成代码;
-* 使用 Groovy 编写脚本以获得完整的模板定义能力.
+* 使用 Groovy 与 javapoet 编写脚本以获得完整的模板定义能力.
 
 ## Requirements
 
