@@ -1,10 +1,12 @@
 package dev.krun.xg;
 
+import com.squareup.javapoet.JavaFile;
 import groovy.lang.GroovyClassLoader;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * 模板渲染器
@@ -51,11 +53,11 @@ public class TemplateRender {
 		return templates;
 	}
 
-	public void renderAllTemplates(String entityClassName) {
-		templates.forEach(template -> renderTemplate(template, entityClassName));
+	public void renderAllTemplates(String entityClassName, Consumer<JavaFile> templateConsumer) {
+		templates.forEach(template -> templateConsumer.accept(renderTemplate(template, entityClassName)));
 	}
 
-	protected String renderTemplate(Template template, String entityClassName) {
+	protected JavaFile renderTemplate(Template template, String entityClassName) {
 		System.out.println(String.format("Using template \"%s\" for entity %s.", template.getClass().getSimpleName(), entityClassName));
 		int endIndex = entityClassName.lastIndexOf('.');
 		return template.generate(entityClassName.substring(0, endIndex), entityClassName.substring(endIndex + 1));

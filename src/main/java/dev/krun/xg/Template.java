@@ -1,5 +1,7 @@
 package dev.krun.xg;
 
+import com.squareup.javapoet.JavaFile;
+
 /**
  * 模板
  * @author krun
@@ -7,6 +9,6 @@ package dev.krun.xg;
  */
 public abstract class Template {
 
-	public abstract String generate(String entityPackageName, String entityName);
+	public abstract JavaFile generate(String entityPackageName, String entityName);
 
 }
