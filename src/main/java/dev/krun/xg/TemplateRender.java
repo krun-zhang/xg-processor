@@ -37,7 +37,11 @@ public class TemplateRender {
 		List<File> files = Arrays.asList(Optional.ofNullable(path.listFiles((dir, name) -> name.endsWith("groovy"))).orElse(new File[0]));
 		GroovyClassLoader groovyClassLoader = new GroovyClassLoader(this.getClass().getClassLoader());
 		files.forEach(file -> {
-			System.out.println("Found template: " + file.getAbsolutePath());
+			try {
+				System.out.println("Found template: " + file.getCanonicalPath());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			try {
 				templates.add((Template) groovyClassLoader.parseClass(file).newInstance());
 			} catch (IOException | IllegalAccessException | InstantiationException e) {
