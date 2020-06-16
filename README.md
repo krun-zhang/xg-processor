@@ -5,12 +5,7 @@
 ## Features
 
 * 无代码侵入性，*maven* 中依赖此项目后，通过环境变量设置相关参数就可以开始生成代码;
-
-### Todo
-
-* [ ] 若待生成的 *class* 已存在则会被略过;
-* [ ] 具有一系列参数用以控制生成结果;
-* [ ] 可以通过 *SPI* 加载自定义生成策略.
+* 使用 Groovy 编写脚本以获得完整的模板定义能力.
 
 ## Requirements
 
@@ -27,8 +22,52 @@ maven install
 
 ## Usage
 
+> **注意**: 由于 `GroovyClassLoader` 的问题，脚本中请使用 `ClassName.get(<packageName>, <className>)` 来获得类型描述符而不是通过 `import <package>.<className>`.
+
 1. 在项目 *pom* 文件中添加此模块的依赖（本地依赖）;
 2. 设置环境变量，可以通过 IDE 的 *Run configuration* 等相关功能进行设置.
+3. 在模板存放目录下新建一个 *groovy* 文件，举个栗子：
+    ```groovy
+    package xg
+    
+    import com.squareup.javapoet.*
+    import dev.krun.xg.Template
+    
+    class Repository extends Template {
+        public static final ClassName repositorySupperInterface = ClassName.get("org.springframework.data.jpa.repository", "JpaRepository")
+        private final repositoryAnnotation = ClassName.get("org.springframework.stereotype", "Repository")
+    
+        @Override
+        JavaFile generate(String entityPackageName, String entityName) {
+            def entityClass = ClassName.get(entityPackageName, entityName)
+            def classSpec = TypeSpec.interfaceBuilder(entityName + "Repository")
+                    .addAnnotation(repositoryAnnotation)
+                    .addSuperinterface(ParameterizedTypeName.get(repositorySupperInterface, entityClass, TypeName.get(Long.class)))
+                    .build()
+            return JavaFile.builder("org.example.repository", classSpec)
+                    .build()
+        }
+    }
+    ```
+   它会生成：
+   ```java
+    package org.example.repository;
+    
+    import java.lang.Long;
+    import org.example.entity.Test;
+    import org.springframework.data.jpa.repository.JpaRepository;
+    import org.springframework.stereotype.Repository;
+    
+    @Repository
+    interface TestRepository extends JpaRepository<Test, Long> {
+    }
+    ```
+4. 在 `target/generated-sources/annotations` 中获得生成的文件.
+
+### 环境变量
+
+* `xg-enable`: 是否启用
+* `xg-template`: 模板文件存放目录，默认为 `./src/main/resources/xg`
 
 ## Support
 
@@ -59,5 +98,3 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
-
-## Changelog
