@@ -37,6 +37,10 @@ public class XGConfiguration {
 		for (Field declaredField : XGConfiguration.class.getDeclaredFields()) {
 			declaredField.setAccessible(true);
 			Property property = declaredField.getAnnotation(Property.class);
+			/* fix: 常量声明也属于字段. */
+			if (property == null) {
+				continue;
+			}
 			try {
 				declaredField.set(configuration, parseValue(declaredField.getType(), env.getOrDefault(property.name(), property.defaultValue())));
 			} catch (IllegalAccessException e) {
