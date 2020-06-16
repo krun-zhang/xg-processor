@@ -35,7 +35,7 @@ public class TemplateRender {
 			throw new UnsupportedOperationException("请提供存放模板文件的有效路径!");
 		}
 		List<File> files = Arrays.asList(Optional.ofNullable(path.listFiles((dir, name) -> name.endsWith("groovy"))).orElse(new File[0]));
-		GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
+		GroovyClassLoader groovyClassLoader = new GroovyClassLoader(this.getClass().getClassLoader());
 		files.forEach(file -> {
 			try {
 				System.out.println("Found template: " + file.getCanonicalPath());
