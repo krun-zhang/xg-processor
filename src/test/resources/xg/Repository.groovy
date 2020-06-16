@@ -8,7 +8,7 @@ class Repository extends Template {
     private final repositoryAnnotation = ClassName.get("org.springframework.stereotype", "Repository")
 
     @Override
-    String generate(String entityPackageName, String entityName) {
+    JavaFile generate(String entityPackageName, String entityName) {
         def entityClass = ClassName.get(entityPackageName, entityName)
         def classSpec = TypeSpec.interfaceBuilder(entityName + "Repository")
                 .addAnnotation(repositoryAnnotation)
@@ -16,6 +16,5 @@ class Repository extends Template {
                 .build()
         return JavaFile.builder("org.example.repository", classSpec)
                 .build()
-                .toString()
     }
 }

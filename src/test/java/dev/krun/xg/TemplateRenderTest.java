@@ -22,7 +22,7 @@ public class TemplateRenderTest {
 	public void testRenderTemplate() {
 		TemplateRender templateRender = new TemplateRender("./src/test/resources/xg");
 		List<Template> templates = templateRender.loadTemplates();
-		String template = templateRender.renderTemplate(templates.get(0), "org.example.entity.Test");
+		String template = templateRender.renderTemplate(templates.get(0), "org.example.entity.Test").toString();
 		System.out.println(template);
 	}
 
