@@ -2,10 +2,7 @@ package dev.krun.xg;
 
 import com.google.auto.service.AutoService;
 
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.Processor;
-import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
@@ -51,8 +48,11 @@ public class XGProcessor extends AbstractProcessor {
 		}
 		for (Element element : elements) {
 			templateRender.renderAllTemplates(element.asType().toString(), javaFile -> {
+				String className = javaFile.packageName + "." + javaFile.typeSpec.name;
 				try {
 					javaFile.writeTo(processingEnv.getFiler());
+				} catch (FilerException e) {
+					System.out.println(className + "已存在，不再为其生成.");
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
