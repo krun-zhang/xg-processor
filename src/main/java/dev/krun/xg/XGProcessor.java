@@ -50,9 +50,12 @@ public class XGProcessor extends AbstractProcessor {
 			templateRender.renderAllTemplates(element.asType().toString(), javaFile -> {
 				String className = javaFile.packageName + "." + javaFile.typeSpec.name;
 				try {
-					javaFile.writeTo(processingEnv.getFiler());
-				} catch (FilerException e) {
-					System.out.println(className + "已存在，不再为其生成.");
+					if (processingEnv.getElementUtils().getTypeElement(className) == null) {
+						javaFile.writeTo(processingEnv.getFiler());
+					} else {
+						System.out.println(className + " 已存在.");
+					}
+
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
